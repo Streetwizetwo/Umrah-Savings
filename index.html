@@ -96,6 +96,53 @@
             color: var(--gold-color);
         }
         
+        /* COUNTDOWN TIMER STYLES */
+        .countdown-container {
+            background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(245,245,245,0.9));
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            border: 1px solid rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        
+        .countdown-title {
+            color: var(--primary-color);
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+        
+        .countdown-timer {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .countdown-unit {
+            background: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            min-width: 70px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .countdown-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--accent-color);
+            line-height: 1;
+        }
+        
+        .countdown-label {
+            font-size: 0.8em;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            margin-top: 5px;
+        }
+        
         .progress-container {
             background-color: #e0e0e0;
             border-radius: 20px;
@@ -470,6 +517,13 @@
                 width: 100%;
                 margin-top: 10px;
             }
+            .countdown-unit {
+                min-width: 60px;
+                padding: 8px 10px;
+            }
+            .countdown-value {
+                font-size: 1.5em;
+            }
         }
     </style>
 </head>
@@ -481,6 +535,31 @@
         </h1>
         <div class="subtitle">Tahir <span class="couple-icon"><i class="fas fa-heart"></i></span> Khatija's 2026 Umrah Journey</div>
     </header>
+    
+    <!-- COUNTDOWN TIMER -->
+    <div class="countdown-container">
+        <div class="countdown-title">
+            <i class="fas fa-clock islamic-icon"></i> Time Until Our Blessed Journey
+        </div>
+        <div class="countdown-timer" id="countdown">
+            <div class="countdown-unit">
+                <div class="countdown-value" id="months">16</div>
+                <div class="countdown-label">Months</div>
+            </div>
+            <div class="countdown-unit">
+                <div class="countdown-value" id="days">0</div>
+                <div class="countdown-label">Days</div>
+            </div>
+            <div class="countdown-unit">
+                <div class="countdown-value" id="hours">0</div>
+                <div class="countdown-label">Hours</div>
+            </div>
+            <div class="countdown-unit">
+                <div class="countdown-value" id="minutes">0</div>
+                <div class="countdown-label">Minutes</div>
+            </div>
+        </div>
+    </div>
     
     <div class="supplication">
         <p>"Our Lord! Accept from us this service. Indeed, You are the All-Hearing, the All-Knowing."</p>
@@ -508,11 +587,11 @@
     
     <div class="suggested-amount">
         <h2><i class="fas fa-calendar-check islamic-icon"></i> Suggested Savings Plan</h2>
-        <p>Based on a target of <span class="zar">R45,000</span> by November 2026 (30 months):</p>
+        <p>Based on a target of <span class="zar">R45,000</span> by November 2026 (16 months):</p>
         <ul>
-            <li><strong><i class="fas fa-calendar-alt islamic-icon"></i> Monthly savings:</strong> <span class="zar">R1,500</span></li>
-            <li><strong><i class="fas fa-calendar-week islamic-icon"></i> Weekly savings:</strong> <span class="zar">R346</span></li>
-            <li><strong><i class="fas fa-sun islamic-icon"></i> Daily savings:</strong> <span class="zar">R50</span></li>
+            <li><strong><i class="fas fa-calendar-alt islamic-icon"></i> Monthly savings:</strong> <span class="zar">R2,813</span></li>
+            <li><strong><i class="fas fa-calendar-week islamic-icon"></i> Weekly savings:</strong> <span class="zar">R649</span></li>
+            <li><strong><i class="fas fa-sun islamic-icon"></i> Daily savings:</strong> <span class="zar">R93</span></li>
         </ul>
         <p class="notes">"And whoever fears Allah - He will make for him a way out and provide for him from where he does not expect." (Quran 65:2-3)</p>
     </div>
@@ -772,217 +851,165 @@
         let appData = JSON.parse(JSON.stringify(DEFAULT_DATA));
         let isLoading = false;
 
-        // Load data from JSONBin.io
-        async function loadData() {
+        // COUNTDOWN TIMER CALCULATION
+        function updateCountdown() {
+            const umrahDate = new Date('November 1, 2026 00:00:00');
+            const now = new Date();
+            const diff = umrahDate - now;
+            
+            if (diff <= 0) {
+                document.getElementById('countdown').innerHTML = 
+                    '<div style="text-align:center; color: var(--accent-color); font-weight:bold;">Our Umrah journey has begun! May Allah accept our pilgrimage.</div>';
+                return;
+            }
+            
+            // Calculate months, days, hours, minutes
+            const totalDays = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const months = Math.floor(totalDays / 30);
+            const days = totalDays % 30;
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            
+            document.getElementById('months').textContent = months;
+            document.getElementById('days').textContent = days;
+            document.getElementById('hours').textContent = hours;
+            document.getElementById('minutes').textContent = minutes;
+        }
+
+        // Update countdown every minute
+        updateCountdown();
+        setInterval(updateCountdown, 60000);
+
+        // Initialize the app
+        async function initApp() {
             try {
                 isLoading = true;
-                toggleLoadingState(true);
-                
                 const response = await fetch(API_URL, {
                     headers: {
                         'X-Master-Key': API_KEY,
-                        'X-Bin-Meta': 'false'
+                        'Content-Type': 'application/json'
                     }
                 });
                 
-                if (!response.ok) {
-                    throw new Error('Failed to load data');
-                }
-                
-                const data = await response.json();
-                if (data && data.tripDetails) {
-                    return data;
-                }
-                throw new Error('Invalid data structure');
-            } catch (error) {
-                console.warn('Using default data due to loading error:', error);
-                
-                // Check localStorage for backup
-                const backup = localStorage.getItem('umrahBudgetBackup');
-                if (backup) {
-                    try {
-                        return JSON.parse(backup);
-                    } catch (e) {
-                        console.warn('Failed to parse backup data:', e);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.record) {
+                        appData = data.record;
                     }
                 }
-                
-                return JSON.parse(JSON.stringify(DEFAULT_DATA));
+            } catch (error) {
+                console.error("Error loading saved data:", error);
             } finally {
                 isLoading = false;
-                toggleLoadingState(false);
+                renderApp();
             }
         }
 
+        // Render the app with current data
+        function renderApp() {
+            // Set form values
+            elements.currentSavings.value = appData.tripDetails.currentSavings;
+            elements.targetAmount.value = appData.tripDetails.targetAmount;
+            
+            // Set expense inputs
+            appData.expenseCategories.forEach(category => {
+                const input = document.getElementById(`${category.id}Cost`);
+                if (input) input.value = category.budget;
+            });
+            
+            // Calculate and display total
+            calculateTotal();
+            
+            // Update progress bar
+            updateProgressBar();
+        }
+
+        // Calculate total expenses
+        function calculateTotal() {
+            let total = 0;
+            appData.expenseCategories.forEach(category => {
+                total += category.budget;
+            });
+            
+            elements.totalCost.textContent = `R${total.toLocaleString()}`;
+            appData.tripDetails.targetAmount = total;
+            elements.targetAmount.value = total;
+            
+            return total;
+        }
+
+        // Update progress bar
+        function updateProgressBar() {
+            const current = parseFloat(elements.currentSavings.value) || 0;
+            const target = parseFloat(elements.targetAmount.value) || 1;
+            const percentage = Math.min(100, Math.round((current / target) * 100));
+            
+            elements.progressBar.style.width = `${percentage}%`;
+            elements.progressBar.textContent = `${percentage}%`;
+        }
+
         // Save data to JSONBin.io
-        async function saveData(data) {
+        async function saveData() {
             try {
                 isLoading = true;
-                toggleLoadingState(true);
+                
+                // Update data from form inputs
+                appData.tripDetails.currentSavings = parseFloat(elements.currentSavings.value) || 0;
+                appData.tripDetails.targetAmount = parseFloat(elements.targetAmount.value) || 45000;
+                appData.tripDetails.lastUpdated = new Date().toISOString();
+                
+                // Update expense categories
+                appData.expenseCategories.forEach(category => {
+                    const input = document.getElementById(`${category.id}Cost`);
+                    if (input) category.budget = parseFloat(input.value) || 0;
+                });
                 
                 const response = await fetch(API_URL, {
                     method: 'PUT',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'X-Master-Key': API_KEY
+                        'X-Master-Key': API_KEY,
+                        'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(data)
+                    body: JSON.stringify(appData)
                 });
                 
                 if (!response.ok) {
                     throw new Error('Failed to save data');
                 }
                 
-                // Update local copy
-                appData = JSON.parse(JSON.stringify(data));
-                appData.tripDetails.lastUpdated = new Date().toISOString();
+                // Update UI
+                calculateTotal();
+                updateProgressBar();
                 
-                // Create backup in localStorage
-                localStorage.setItem('umrahBudgetBackup', JSON.stringify(appData));
-                
-                return await response.json();
             } catch (error) {
-                console.error('Error saving data:', error);
-                return null;
+                console.error("Error saving data:", error);
+                alert("Failed to save data. Please try again.");
             } finally {
                 isLoading = false;
-                toggleLoadingState(false);
             }
         }
 
-        // Toggle loading state
-        function toggleLoadingState(isLoading) {
-            const buttons = [elements.updateProgressBtn, elements.calculateTotalBtn];
-            
-            buttons.forEach(button => {
-                if (isLoading) {
-                    button.disabled = true;
-                    button.innerHTML = `<span class="loading"></span>${button.innerHTML}`;
-                } else {
-                    button.disabled = false;
-                    button.querySelector('.loading')?.remove();
-                }
-            });
-        }
-
-        // Update the UI with current data
-        function updateUI(data) {
-            // Trip details
-            elements.currentSavings.value = data.tripDetails.currentSavings;
-            elements.targetAmount.value = data.tripDetails.targetAmount;
-            
-            // Expense categories
-            data.expenseCategories.forEach(category => {
-                const input = document.getElementById(`${category.id}Cost`);
-                if (input) input.value = category.budget;
-            });
-            
-            // Calculate and update totals
-            calculateTotal();
-        }
-
-        // Set up all event listeners
-        function setupEventListeners() {
-            // Update progress button
-            elements.updateProgressBtn.addEventListener('click', updateProgress);
-            
-            // Calculate total button
-            elements.calculateTotalBtn.addEventListener('click', calculateTotal);
-            
-            // All editable cost inputs
-            elements.expenseInputs.forEach(input => {
-                input.addEventListener('change', calculateTotal);
-            });
-            
-            // Current savings input
-            elements.currentSavings.addEventListener('change', updateProgress);
-            
-            // Expense category headers (for toggling details)
-            document.querySelectorAll('.expense-header').forEach(header => {
+        // Toggle expense details
+        function setupExpenseToggles() {
+            const headers = document.querySelectorAll('.expense-header');
+            headers.forEach(header => {
                 header.addEventListener('click', function() {
-                    const details = this.nextElementSibling;
+                    const detailsId = this.id.replace('Header', 'Details');
+                    const details = document.getElementById(detailsId);
                     details.classList.toggle('show');
                 });
             });
         }
 
-        // Calculate the total budget
-        async function calculateTotal() {
-            if (isLoading) return;
-            
-            let total = 0;
-            const updatedCategories = [];
-            
-            elements.expenseInputs.forEach(input => {
-                const value = parseFloat(input.value) || 0;
-                total += value;
-                
-                updatedCategories.push({
-                    id: input.id.replace('Cost', ''),
-                    budget: value
-                });
-            });
-            
-            elements.totalCost.textContent = 'R' + total.toLocaleString('en-ZA');
-            elements.targetAmount.value = total;
-            
-            // Prepare updated data
-            const updatedData = {
-                ...appData,
-                tripDetails: {
-                    ...appData.tripDetails,
-                    targetAmount: total,
-                    currentSavings: parseFloat(elements.currentSavings.value) || 0,
-                    lastUpdated: new Date().toISOString()
-                },
-                expenseCategories: updatedCategories
-            };
-            
-            // Save the updated data
-            await saveData(updatedData);
-            
-            updateProgress();
-        }
-
-        // Update the progress bar
-        function updateProgress() {
-            const current = parseFloat(elements.currentSavings.value) || 0;
-            const target = parseFloat(elements.targetAmount.value) || 1;
-            const percentage = Math.min(Math.round((current / target) * 100), 100);
-            
-            elements.progressBar.style.width = percentage + '%';
-            elements.progressBar.textContent = percentage + '%';
-            
-            // Update data if changed
-            if (appData.tripDetails.currentSavings !== current) {
-                appData.tripDetails.currentSavings = current;
-                saveData(appData);
-            }
-        }
-
-        // Initialize the application
-        async function initializeApp() {
-            // Load data
-            appData = await loadData();
-            
-            // Update UI with loaded data
-            updateUI(appData);
-            
-            // Set up event listeners
-            setupEventListeners();
-            
-            // Show all sections (initially hidden to prevent flash)
-            document.body.style.opacity = 1;
-        }
-
-        // Initialize when DOM is fully loaded
-        document.addEventListener('DOMContentLoaded', () => {
-            // Hide body initially to prevent flash
-            document.body.style.opacity = 0;
-            
-            // Initialize app
-            initializeApp();
-        });
+        // Event Listeners
+        elements.updateProgressBtn.addEventListener('click', saveData);
+        elements.calculateTotalBtn.addEventListener('click', calculateTotal);
+        
+        // Initialize expense toggles
+        setupExpenseToggles();
+        
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', initApp);
     </script>
 </body>
 </html>
