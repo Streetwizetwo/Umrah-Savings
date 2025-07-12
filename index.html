@@ -1,775 +1,988 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Kats@teez Umrah Tracker</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-  <style>
-    :root {
-      --primary: #8E44AD;
-      --primary-dark: #6C3483;
-      --secondary: #2ECC71;
-      --danger: #E74C3C;
-      --warning: #F39C12;
-      --light: #F5F5F5;
-      --dark: #2C3E50;
-      --text: #34495E;
-    }
-    
-    body {
-      font-family: 'Poppins', 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-      padding: 20px;
-      min-height: 100vh;
-      margin: 0;
-      color: var(--text);
-      background-image: url('https://images.unsplash.com/photo-1519817650390-64a93db51149?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
-      background-size: cover;
-      background-attachment: fixed;
-      background-position: center;
-      background-blend-mode: overlay;
-    }
-    
-    h1 { 
-      text-align: center; 
-      color: white;
-      margin-bottom: 10px;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-      font-weight: 700;
-    }
-    
-    .subtitle {
-      text-align: center;
-      color: rgba(255,255,255,0.9);
-      margin-bottom: 30px;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-      font-weight: 300;
-    }
-    
-    .container {
-      background: rgba(255, 255, 255, 0.95);
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-      backdrop-filter: blur(5px);
-      animation: fadeInUp 0.8s ease-out;
-      max-width: 600px;
-      margin: 20px auto;
-    }
-    
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    .form-group {
-      margin-bottom: 20px;
-    }
-    
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-      color: var(--dark);
-    }
-    
-    input[type="number"], select {
-      width: 100%;
-      padding: 14px;
-      border-radius: 8px;
-      border: 2px solid #ddd;
-      font-size: 16px;
-      transition: all 0.3s;
-      background: rgba(255,255,255,0.8);
-    }
-    
-    input[type="number"]:focus, select:focus {
-      border-color: var(--primary);
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(142, 68, 173, 0.2);
-      transform: translateY(-2px);
-    }
-    
-    button {
-      margin-top: 20px;
-      padding: 14px 24px;
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 16px;
-      font-weight: 600;
-      width: 100%;
-      transition: all 0.3s;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-    
-    button:hover { 
-      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
-      transform: translateY(-3px);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-    }
-    
-    button:active {
-      transform: translateY(1px);
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    
-    .progress-container {
-      margin-top: 30px;
-      height: 26px;
-      background: rgba(0,0,0,0.05);
-      border-radius: 13px;
-      overflow: hidden;
-      box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
-    }
-    
-    .progress-bar {
-      height: 100%;
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
-      width: 0%;
-      transition: width 0.8s cubic-bezier(0.65, 0, 0.35, 1);
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      padding-right: 12px;
-      color: white;
-      font-size: 12px;
-      font-weight: bold;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .progress-bar::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(
-        90deg,
-        rgba(255, 255, 255, 0) 0%,
-        rgba(255, 255, 255, 0.3) 50%,
-        rgba(255, 255, 255, 0) 100%
-      );
-      animation: shimmer 2s infinite;
-    }
-    
-    @keyframes shimmer {
-      0% {
-        transform: translateX(-100%);
-      }
-      100% {
-        transform: translateX(100%);
-      }
-    }
-    
-    .status {
-      margin-top: 30px;
-    }
-    
-    .status-item {
-      margin-bottom: 15px;
-      padding: 15px;
-      background: rgba(255,255,255,0.7);
-      border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-      transition: transform 0.3s;
-    }
-    
-    .status-item:hover {
-      transform: translateY(-3px);
-    }
-    
-    .status-item strong {
-      display: inline-block;
-      min-width: 150px;
-      color: var(--primary-dark);
-    }
-    
-    .category-progress {
-      margin-top: 25px;
-      background: rgba(255,255,255,0.7);
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    }
-    
-    .category-item {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 10px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid rgba(0,0,0,0.05);
-    }
-    
-    .category-progress-bar {
-      height: 10px;
-      background: rgba(0,0,0,0.05);
-      border-radius: 5px;
-      margin-top: 8px;
-      overflow: hidden;
-    }
-    
-    .category-progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--primary), var(--warning));
-      width: 0%;
-      transition: width 0.8s cubic-bezier(0.65, 0, 0.35, 1);
-      position: relative;
-    }
-    
-    .time-info-card {
-      background: linear-gradient(135deg, rgba(46, 204, 113, 0.1), rgba(52, 152, 219, 0.1));
-      padding: 20px;
-      border-radius: 10px;
-      margin-top: 25px;
-      border-left: 5px solid var(--secondary);
-      animation: pulse 2s infinite alternate;
-    }
-    
-    @keyframes pulse {
-      from {
-        box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.4);
-      }
-      to {
-        box-shadow: 0 0 0 10px rgba(46, 204, 113, 0);
-      }
-    }
-    
-    .time-info-item {
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-    }
-    
-    .time-info-item span {
-      margin-left: 10px;
-    }
-    
-    .time-info-item strong {
-      color: var(--secondary);
-      min-width: 120px;
-    }
-    
-    .transaction-history {
-      margin-top: 30px;
-      max-height: 300px;
-      overflow-y: auto;
-      padding-right: 10px;
-    }
-    
-    .transaction-history::-webkit-scrollbar {
-      width: 6px;
-    }
-    
-    .transaction-history::-webkit-scrollbar-track {
-      background: rgba(0,0,0,0.05);
-      border-radius: 3px;
-    }
-    
-    .transaction-history::-webkit-scrollbar-thumb {
-      background: var(--primary);
-      border-radius: 3px;
-    }
-    
-    .transaction-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 15px;
-      background: rgba(255,255,255,0.8);
-      border-radius: 8px;
-      margin-bottom: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-      transition: all 0.3s;
-      animation: fadeIn 0.5s ease-out;
-    }
-    
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateX(-10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
-    }
-    
-    .transaction-item:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    }
-    
-    .transaction-positive {
-      border-left: 5px solid var(--secondary);
-    }
-    
-    .alert {
-      padding: 15px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-      display: none;
-      animation: bounceIn 0.5s;
-    }
-    
-    @keyframes bounceIn {
-      0% {
-        transform: scale(0.8);
-        opacity: 0;
-      }
-      50% {
-        transform: scale(1.05);
-      }
-      100% {
-        transform: scale(1);
-        opacity: 1;
-      }
-    }
-    
-    .alert-success {
-      background-color: rgba(46, 204, 113, 0.2);
-      color: #27AE60;
-      border-left: 5px solid var(--secondary);
-    }
-    
-    .alert-error {
-      background-color: rgba(231, 76, 60, 0.2);
-      color: #C0392B;
-      border-left: 5px solid var(--danger);
-    }
-    
-    .emoji {
-      font-size: 1.2em;
-      margin-right: 5px;
-    }
-    
-    .confetti {
-      position: fixed;
-      width: 10px;
-      height: 10px;
-      background-color: var(--primary);
-      opacity: 0;
-      z-index: 9999;
-      animation: confetti 3s ease-out;
-    }
-    
-    @keyframes confetti {
-      0% {
-        transform: translateY(0) rotate(0deg);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(100vh) rotate(720deg);
-        opacity: 0;
-      }
-    }
-    
-    @media (max-width: 480px) {
-      body {
-        padding: 10px;
-      }
-      
-      .container {
-        padding: 20px;
-      }
-      
-      h1 {
-        font-size: 24px;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Two Hearts, One Qibla: Tahir & Khatija's 2026 Umrah</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #1a5f7a;
+            --secondary-color: #57c5b6;
+            --accent-color: #159895;
+            --light-color: #f9f9f9;
+            --gold-color: #d4af37;
+            --love-color: #e83f6f;
+            --text-color: #333;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.8;
+            color: var(--text-color);
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f5f0;
+            background-image: url('https://www.transparenttextures.com/patterns/cream-paper.png');
+            opacity: 0;
+            animation: fadeIn 0.5s ease-in forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 5px solid var(--love-color);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><text x="10" y="50" font-family="Arial" font-size="40" fill="rgba(255,255,255,0.05)">ﷲ</text></svg>');
+            opacity: 0.3;
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2.3em;
+            font-weight: 300;
+            position: relative;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+            letter-spacing: 0.5px;
+        }
+        
+        h1 .hearts {
+            color: var(--love-color);
+            margin: 0 5px;
+            font-size: 1.2em;
+        }
+        
+        h1::after {
+            content: "";
+            display: block;
+            width: 150px;
+            height: 3px;
+            background: linear-gradient(to right, var(--love-color), var(--gold-color));
+            margin: 15px auto;
+            border-radius: 3px;
+        }
+        
+        .subtitle {
+            font-style: italic;
+            margin-top: 10px;
+            font-weight: 300;
+            letter-spacing: 0.3px;
+            font-size: 1.1em;
+        }
+        
+        .qibla-arabic {
+            font-family: 'Traditional Arabic', Arial;
+            font-size: 1.1em;
+            color: var(--gold-color);
+        }
+        
+        .progress-container {
+            background-color: #e0e0e0;
+            border-radius: 20px;
+            height: 30px;
+            margin: 30px 0;
+            width: 100%;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+            border-radius: 20px;
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease-out;
+            text-align: center;
+            line-height: 30px;
+            color: white;
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .progress-bar::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: linear-gradient(
+                135deg,
+                rgba(255, 255, 255, 0.15) 25%,
+                transparent 25%,
+                transparent 50%,
+                rgba(255, 255, 255, 0.15) 50%,
+                rgba(255, 255, 255, 0.15) 75%,
+                transparent 75%,
+                transparent
+            );
+            background-size: 40px 40px;
+            animation: progressStripes 2s linear infinite;
+        }
+        
+        @keyframes progressStripes {
+            0% { background-position: 0 0; }
+            100% { background-position: 40px 0; }
+        }
+        
+        .savings-form {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            border: 1px solid #e0e0e0;
+            position: relative;
+        }
+        
+        .savings-form::before {
+            content: "";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            font-size: 40px;
+            color: rgba(23, 107, 135, 0.1);
+            z-index: 0;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+        
+        input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        
+        input[type="number"]:focus, input[type="text"]:focus {
+            border-color: var(--accent-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(21, 152, 149, 0.2);
+        }
+        
+        button {
+            background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.15);
+        }
+        
+        button i {
+            margin-right: 8px;
+        }
+        
+        .expense-category {
+            background-color: white;
+            padding: 0;
+            border-radius: 8px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            border: 1px solid #e0e0e0;
+            overflow: hidden;
+        }
+        
+        .expense-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            padding: 20px;
+            background-color: #f9f9f9;
+            transition: background-color 0.3s;
+        }
+        
+        .expense-header:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .expense-details {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease;
+        }
+        
+        .expense-details.show {
+            padding: 20px;
+            max-height: 1000px;
+            border-top: 1px solid #eee;
+        }
+        
+        .total-display {
+            font-size: 1.4em;
+            font-weight: bold;
+            text-align: center;
+            margin: 30px 0;
+            color: var(--primary-color);
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+            border-left: 5px solid var(--gold-color);
+        }
+        
+        .suggested-amount {
+            background-color: #f0f7f6;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 30px 0;
+            border-left: 5px solid var(--accent-color);
+            position: relative;
+        }
+        
+        .suggested-amount::before {
+            content: "";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 40px;
+            color: rgba(21, 152, 149, 0.1);
+        }
+        
+        .notes {
+            font-style: italic;
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 400;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        tr:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .zar {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-family: 'Courier New', monospace;
+        }
+        
+        .editable-cost {
+            background-color: #fff8e1;
+            padding: 5px 10px;
+            border-radius: 4px;
+            border: 1px solid #ffd54f;
+            font-weight: bold;
+            color: var(--primary-color);
+            width: 120px;
+            text-align: center;
+        }
+        
+        .itinerary {
+            background-color: #f0f7f6;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 30px 0;
+            border-left: 5px solid var(--secondary-color);
+            position: relative;
+        }
+        
+        .itinerary::before {
+            content: "";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 40px;
+            color: rgba(87, 197, 182, 0.1);
+        }
+        
+        .budget-tip {
+            background-color: #fff8e1;
+            padding: 15px;
+            border-left: 4px solid var(--gold-color);
+            margin: 15px 0;
+            border-radius: 0 4px 4px 0;
+            position: relative;
+        }
+        
+        .budget-tip::before {
+            content: "";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            left: 10px;
+            top: 15px;
+            color: var(--gold-color);
+        }
+        
+        .budget-tip strong {
+            margin-left: 25px;
+        }
+        
+        .islamic-pattern {
+            height: 20px;
+            background-color: var(--primary-color);
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path fill="%23159895" d="M50 0L100 50L50 100L0 50Z"></path></svg>');
+            background-size: 20px 20px;
+            margin: 40px 0;
+            opacity: 0.7;
+            border-radius: 10px;
+        }
+        
+        .supplication {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 30px 0;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            font-style: italic;
+            border-right: 5px solid var(--gold-color);
+            position: relative;
+        }
+        
+        .supplication::before, .supplication::after {
+            content: "";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            color: var(--gold-color);
+            position: absolute;
+            font-size: 20px;
+        }
+        
+        .supplication::before {
+            top: 10px;
+            left: 10px;
+        }
+        
+        .supplication::after {
+            bottom: 10px;
+            right: 10px;
+            transform: rotate(180deg);
+        }
+        
+        .islamic-icon {
+            color: var(--gold-color);
+            margin-right: 8px;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .couple-icon {
+            display: inline-block;
+            margin: 0 5px;
+            color: var(--love-color);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+            .subtitle {
+                font-size: 1em;
+            }
+            .expense-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .editable-cost {
+                width: 100%;
+                margin-top: 10px;
+            }
+        }
+    </style>
 </head>
 <body>
-
-  <h1 class="animate__animated animate__fadeInDown">🧕 Kats@teez Umrah Tracker</h1>
-  <p class="subtitle animate__animated animate__fadeIn animate__delay-1s">Track your savings for the blessed journey</p>
-  
-  <div class="container">
-    <div id="successAlert" class="alert alert-success"></div>
-    <div id="errorAlert" class="alert alert-error"></div>
+    <header>
+        <h1>
+            Two <span class="hearts">♥</span> Hearts<br>
+            One <span class="qibla-arabic">قبلة</span>
+        </h1>
+        <div class="subtitle">Tahir <span class="couple-icon"><i class="fas fa-heart"></i></span> Khatija's 2026 Umrah Journey</div>
+    </header>
     
-    <div class="form-group animate__animated animate__fadeIn animate__delay-1s">
-      <label for="category">What are you saving for?</label>
-      <select id="category">
-        <option value="flight">✈️ Flight (R25,000)</option>
-        <option value="accommodation">🏨 Accommodation (R12,000)</option>
-        <option value="misc">🍱 Food & Other (R13,000)</option>
-      </select>
+    <div class="supplication">
+        <p>"Our Lord! Accept from us this service. Indeed, You are the All-Hearing, the All-Knowing."</p>
+        <p>(Quran 2:127)</p>
+    </div>
+    
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar">0%</div>
+    </div>
+    
+    <div class="savings-form">
+        <h2><i class="fas fa-piggy-bank islamic-icon"></i> Savings Tracker</h2>
+        <div class="form-group">
+            <label for="currentSavings"><i class="fas fa-wallet islamic-icon"></i> Current Savings Amount (<span class="zar">ZAR</span>):</label>
+            <input type="number" id="currentSavings" min="0" step="1000" placeholder="Enter amount saved">
+        </div>
+        <div class="form-group">
+            <label for="targetAmount"><i class="fas fa-bullseye islamic-icon"></i> Target Amount (<span class="zar">ZAR</span>):</label>
+            <input type="number" id="targetAmount" min="0" step="1000" value="45000">
+        </div>
+        <button id="updateProgressBtn"><i class="fas fa-sync-alt"></i> Update Progress</button>
+    </div>
+    
+    <div class="islamic-pattern"></div>
+    
+    <div class="suggested-amount">
+        <h2><i class="fas fa-calendar-check islamic-icon"></i> Suggested Savings Plan</h2>
+        <p>Based on a target of <span class="zar">R45,000</span> by November 2026 (30 months):</p>
+        <ul>
+            <li><strong><i class="fas fa-calendar-alt islamic-icon"></i> Monthly savings:</strong> <span class="zar">R1,500</span></li>
+            <li><strong><i class="fas fa-calendar-week islamic-icon"></i> Weekly savings:</strong> <span class="zar">R346</span></li>
+            <li><strong><i class="fas fa-sun islamic-icon"></i> Daily savings:</strong> <span class="zar">R50</span></li>
+        </ul>
+        <p class="notes">"And whoever fears Allah - He will make for him a way out and provide for him from where he does not expect." (Quran 65:2-3)</p>
+    </div>
+    
+    <div class="islamic-pattern"></div>
+    
+    <div class="itinerary">
+        <h2><i class="fas fa-route islamic-icon"></i> 6-Day Spiritual Journey</h2>
+        <table>
+            <tr>
+                <th><i class="fas fa-calendar-day"></i> Day</th>
+                <th><i class="fas fa-praying-hands"></i> Activities</th>
+                <th><i class="fas fa-lightbulb"></i> Budget Tips</th>
+            </tr>
+            <tr>
+                <td>Day 1</td>
+                <td>Fly DUR-DXB-JED (overnight flight)</td>
+                <td>Perform Ghusl before departure, pack meals for flight</td>
+            </tr>
+            <tr>
+                <td>Day 2</td>
+                <td>Arrive Jeddah, transfer to Makkah (4 nights)</td>
+                <td>Recite Talbiyah during the journey</td>
+            </tr>
+            <tr>
+                <td>Days 3-5</td>
+                <td>Umrah rituals, prayers at Haram</td>
+                <td>Focus on worship between prayers</td>
+            </tr>
+            <tr>
+                <td>Day 6</td>
+                <td>Morning in Makkah, afternoon flight back</td>
+                <td>Make final dua at the Kaaba before departure</td>
+            </tr>
+        </table>
+        <p class="notes">This blessed journey is designed to maximize spiritual benefit while maintaining a modest budget.</p>
+    </div>
+    
+    <div class="islamic-pattern"></div>
+    
+    <h2><i class="fas fa-coins islamic-icon"></i> Budget Expense Breakdown</h2>
+    <p>All amounts are in South African Rand (ZAR) for two people:</p>
+    
+    <div class="expense-category">
+        <div class="expense-header" id="flightsHeader">
+            <h3><i class="fas fa-plane islamic-icon"></i> Flights (Durban → Dubai → Jeddah)</h3>
+            <span>Total: <input type="number" class="editable-cost" id="flightCost" value="22000" min="0" step="1000"></span>
+        </div>
+        <div class="expense-details" id="flightsDetails">
+            <div class="budget-tip">
+                <strong>Travel Wisdom:</strong> The Prophet (ﷺ) said: "The two feet of the son of Adam will not move from near his Lord on the Day of Judgement until he is asked about five matters..." including how he spent his wealth.
+            </div>
+            <ul>
+                <li><i class="fas fa-check-circle"></i> Economy class return: <span class="zar">R11,000</span> pp (book during Emirates sales)</li>
+                <li><i class="fas fa-check-circle"></i> Include: 30kg baggage allowance (share luggage)</li>
+                <li><i class="fas fa-times-circle"></i> Exclude: Seat selection fees (accept allocation)</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="expense-category">
+        <div class="expense-header" id="accommodationHeader">
+            <h3><i class="fas fa-hotel islamic-icon"></i> Accommodation (5 nights)</h3>
+            <span>Total: <input type="number" class="editable-cost" id="accomCost" value="7500" min="0" step="100"></span>
+        </div>
+        <div class="expense-details" id="accommodationDetails">
+            <div class="budget-tip">
+                <strong>Prophetic Guidance:</strong> The Prophet (ﷺ) lived simply. Focus on the spiritual experience rather than luxury accommodations.
+            </div>
+            <table>
+                <tr>
+                    <th>Location</th>
+                    <th>Nights</th>
+                    <th>Budget</th>
+                    <th>Total</th>
+                </tr>
+                <tr>
+                    <td>Makkah (Modest hotel)</td>
+                    <td>4</td>
+                    <td><span class="zar">R1,500</span>/night</td>
+                    <td><span class="zar">R6,000</span></td>
+                </tr>
+                <tr>
+                    <td>Jeddah (Airport hotel)</td>
+                    <td>1</td>
+                    <td><span class="zar">R1,500</span>/night</td>
+                    <td><span class="zar">R1,500</span></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    
+    <div class="expense-category">
+        <div class="expense-header" id="visaHeader">
+            <h3><i class="fas fa-passport islamic-icon"></i> Visa & Admin Costs</h3>
+            <span>Total: <input type="number" class="editable-cost" id="visaCost" value="8000" min="0" step="100"></span>
+        </div>
+        <div class="expense-details" id="visaDetails">
+            <ul>
+                <li><i class="fas fa-file-alt"></i> Umrah visa: <span class="zar">R3,500</span> pp (through approved agent)</li>
+                <li><i class="fas fa-shield-alt"></i> Travel insurance: <span class="zar">R500</span> pp (basic coverage)</li>
+                <li><i class="fas fa-syringe"></i> Vaccinations: <span class="zar">R500</span> pp (meningitis only)</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="expense-category">
+        <div class="expense-header" id="foodHeader">
+            <h3><i class="fas fa-utensils islamic-icon"></i> Food & Water (6 days)</h3>
+            <span>Total: <input type="number" class="editable-cost" id="foodCost" value="3000" min="0" step="100"></span>
+        </div>
+        <div class="expense-details" id="foodDetails">
+            <div class="budget-tip">
+                <strong>Islamic Etiquette:</strong> The Prophet (ﷺ) said: "The son of Adam does not fill any vessel worse than his stomach. It is sufficient for the son of Adam to eat a few mouthfuls..."
+            </div>
+            <ul>
+                <li><i class="fas fa-bread-slice"></i> Breakfast: <span class="zar">R100</span> pp/day (dates, bread, labneh)</li>
+                <li><i class="fas fa-drumstick-bite"></i> Lunch/Dinner: <span class="zar">R200</span> pp/day (local restaurants)</li>
+                <li><i class="fas fa-tint"></i> Water/Snacks: <span class="zar">R50</span> pp/day</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="expense-category">
+        <div class="expense-header" id="transportHeader">
+            <h3><i class="fas fa-car islamic-icon"></i> Transportation</h3>
+            <span>Total: <input type="number" class="editable-cost" id="transportCost" value="4000" min="0" step="100"></span>
+        </div>
+        <div class="expense-details" id="transportDetails">
+            <div class="budget-tip">
+                <strong>Spiritual Benefit:</strong> Walking to the Haram brings more reward. The Prophet (ﷺ) said: "Every step taken toward the mosque is charity."
+            </div>
+            <ul>
+                <li><i class="fas fa-shuttle-van"></i> Jeddah Airport to Makkah: <span class="zar">R1,000</span> (shared shuttle)</li>
+                <li><i class="fas fa-shuttle-van"></i> Makkah to Jeddah Airport: <span class="zar">R1,000</span> (shared shuttle)</li>
+                <li><i class="fas fa-taxi"></i> Local taxis: <span class="zar">R2,000</span> (emergency only)</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="expense-category">
+        <div class="expense-header" id="zakatHeader">
+            <h3><i class="fas fa-hand-holding-heart islamic-icon"></i> Zakat & Sadaqah</h3>
+            <span>Total: <input type="number" class="editable-cost" id="zakatCost" value="1000" min="0" step="100"></span>
+        </div>
+        <div class="expense-details" id="zakatDetails">
+            <div class="budget-tip">
+                <strong>Divine Promise:</strong> "The example of those who spend their wealth in the way of Allah is like a seed that grows seven spikes; in each spike is a hundred grains." (Quran 2:261)
+            </div>
+            <p>Budget for charitable giving according to your means during this blessed journey.</p>
+        </div>
+    </div>
+    
+    <div class="expense-category">
+        <div class="expense-header" id="miscHeader">
+            <h3><i class="fas fa-random islamic-icon"></i> Miscellaneous</h3>
+            <span>Total: <input type="number" class="editable-cost" id="miscCost" value="2500" min="0" step="100"></span>
+        </div>
+        <div class="expense-details" id="miscDetails">
+            <ul>
+                <li><i class="fas fa-sim-card"></i> SIM card with data: <span class="zar">R300</span></li>
+                <li><i class="fas fa-gift"></i> Basic shopping (dates, small gifts): <span class="zar">R1,500</span></li>
+                <li><i class="fas fa-first-aid"></i> Emergency fund: <span class="zar">R700</span></li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="total-display">
+        Estimated Total Cost for Two People: <span class="zar" id="totalCost">R45,000</span>
+        <button id="calculateTotalBtn"><i class="fas fa-calculator"></i> Update Total</button>
+    </div>
+    
+    <div class="islamic-pattern"></div>
+    
+    <div class="supplication">
+        <p>"Our Lord! Grant us good in this world and good in the Hereafter, and protect us from the punishment of the Fire."</p>
+        <p>(Quran 2:201)</p>
     </div>
 
-    <div class="form-group animate__animated animate__fadeIn animate__delay-1s">
-      <label for="deposit">Add Deposit (R):</label>
-      <input type="number" id="deposit" placeholder="e.g. 500" min="1" step="any" />
-    </div>
+    <script>
+        // JSONBin.io Configuration
+        const BIN_ID = '687204bb6063391d31abf1a8';
+        const API_KEY = '$2a$10$badKixBj7UPzi9lf6pBspuEWXuy09HysK5V4pR1DSFGuJRR6Jkhkm';
+        const API_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
 
-    <button onclick="addDeposit()" class="animate__animated animate__fadeIn animate__delay-2s">Add Deposit</button>
-
-    <div class="progress-container animate__animated animate__fadeIn animate__delay-2s">
-      <div class="progress-bar" id="progressBar"></div>
-    </div>
-
-    <div class="status">
-      <div class="status-item animate__animated animate__fadeIn animate__delay-2s">
-        <strong>Total Goal:</strong> R<span id="goalAmount">50,000.00</span>
-      </div>
-      <div class="status-item animate__animated animate__fadeIn animate__delay-2s">
-        <strong>Current Savings:</strong> R<span id="currentSavings">0.00</span>
-      </div>
-      <div class="status-item animate__animated animate__fadeIn animate__delay-2s">
-        <strong>Progress:</strong> <span id="progressPercent">0%</span>
-      </div>
-      
-      <div class="category-progress animate__animated animate__fadeIn animate__delay-3s">
-        <h3>Category Progress</h3>
-        <div class="category-item">
-          <span>✈️ Flight</span>
-          <span>R<span id="flightCurrent">0.00</span> / R25,000</span>
-        </div>
-        <div class="category-progress-bar">
-          <div class="category-progress-fill" id="flightProgress"></div>
-        </div>
-        
-        <div class="category-item">
-          <span>🏨 Accommodation</span>
-          <span>R<span id="accommodationCurrent">0.00</span> / R12,000</span>
-        </div>
-        <div class="category-progress-bar">
-          <div class="category-progress-fill" id="accommodationProgress"></div>
-        </div>
-        
-        <div class="category-item">
-          <span>🍱 Food & Other</span>
-          <span>R<span id="miscCurrent">0.00</span> / R13,000</span>
-        </div>
-        <div class="category-progress-bar">
-          <div class="category-progress-fill" id="miscProgress"></div>
-        </div>
-      </div>
-      
-      <div class="time-info-card animate__animated animate__fadeIn animate__delay-3s">
-        <h3>Savings Plan</h3>
-        <div class="time-info-item">
-          <span class="emoji">📆</span>
-          <strong>Months remaining:</strong>
-          <span id="monthsRemaining">0</span>
-        </div>
-        <div class="time-info-item">
-          <span class="emoji">💰</span>
-          <strong>Amount left:</strong>
-          R<span id="remainingAmount">0.00</span>
-        </div>
-        <div class="time-info-item">
-          <span class="emoji">📉</span>
-          <strong>Monthly target:</strong>
-          R<span id="monthlyTarget">0.00</span>
-        </div>
-      </div>
-      
-      <div class="transaction-history animate__animated animate__fadeIn animate__delay-4s">
-        <h3>Recent Transactions</h3>
-        <div id="transactionsList"></div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // Configuration
-    const goals = {
-      flight: 25000,
-      accommodation: 12000,
-      misc: 13000
-    };
-    const totalGoal = goals.flight + goals.accommodation + goals.misc;
-    const targetDateStr = "2026-11-01";
-    let targetDate = new Date(targetDateStr);
-    
-    // State
-    let currentSavings = {
-      total: 0,
-      flight: 0,
-      accommodation: 0,
-      misc: 0
-    };
-    
-    let transactions = [];
-    
-    // DOM Elements
-    const elements = {
-      depositInput: document.getElementById('deposit'),
-      categorySelect: document.getElementById('category'),
-      goalAmount: document.getElementById('goalAmount'),
-      currentSavings: document.getElementById('currentSavings'),
-      progressPercent: document.getElementById('progressPercent'),
-      progressBar: document.getElementById('progressBar'),
-      flightCurrent: document.getElementById('flightCurrent'),
-      accommodationCurrent: document.getElementById('accommodationCurrent'),
-      miscCurrent: document.getElementById('miscCurrent'),
-      flightProgress: document.getElementById('flightProgress'),
-      accommodationProgress: document.getElementById('accommodationProgress'),
-      miscProgress: document.getElementById('miscProgress'),
-      monthsRemaining: document.getElementById('monthsRemaining'),
-      remainingAmount: document.getElementById('remainingAmount'),
-      monthlyTarget: document.getElementById('monthlyTarget'),
-      transactionsList: document.getElementById('transactionsList'),
-      successAlert: document.getElementById('successAlert'),
-      errorAlert: document.getElementById('errorAlert')
-    };
-    
-    // Initialize
-    document.addEventListener('DOMContentLoaded', () => {
-      loadData();
-      formatCurrencyInputs();
-    });
-    
-    // Format currency inputs
-    function formatCurrencyInputs() {
-      elements.depositInput.addEventListener('blur', (e) => {
-        if (e.target.value) {
-          e.target.value = parseFloat(e.target.value).toFixed(2);
-        }
-      });
-    }
-    
-    // Load data from storage
-    async function loadData() {
-      try {
-        const savedData = localStorage.getItem('umrah_savings');
-        if (savedData) {
-          const data = JSON.parse(savedData);
-          currentSavings = data.currentSavings || currentSavings;
-          transactions = data.transactions || transactions;
-        }
-        updateDisplay();
-        showAlert('Data loaded successfully', 'success');
-      } catch (e) {
-        console.error("Load failed", e);
-        showAlert('Failed to load data', 'error');
-      }
-    }
-    
-    // Save data to storage
-    async function saveData() {
-      try {
-        const data = {
-          currentSavings,
-          transactions,
-          goals,
-          totalGoal,
-          targetDate: targetDateStr
+        // Default data structure
+        const DEFAULT_DATA = {
+            "tripDetails": {
+                "title": "Two Hearts, One Qibla: Tahir & Khatija's 2026 Umrah",
+                "year": 2026,
+                "month": "November",
+                "duration": 6,
+                "route": "Durban → Dubai → Jeddah",
+                "currency": "ZAR",
+                "targetAmount": 45000,
+                "currentSavings": 0,
+                "lastUpdated": new Date().toISOString()
+            },
+            "expenseCategories": [
+                {
+                    "id": "flights",
+                    "name": "Flights",
+                    "budget": 22000,
+                    "notes": "Economy class return via Emirates"
+                },
+                {
+                    "id": "accommodation",
+                    "name": "Accommodation",
+                    "budget": 7500,
+                    "notes": "5 nights total"
+                },
+                {
+                    "id": "visa",
+                    "name": "Visa & Admin",
+                    "budget": 8000,
+                    "notes": "Includes visas and insurance"
+                },
+                {
+                    "id": "food",
+                    "name": "Food & Water",
+                    "budget": 3000,
+                    "notes": "Simple meals"
+                },
+                {
+                    "id": "transport",
+                    "name": "Transportation",
+                    "budget": 4000,
+                    "notes": "Shared shuttles"
+                },
+                {
+                    "id": "zakat",
+                    "name": "Zakat & Sadaqah",
+                    "budget": 1000,
+                    "notes": "Charitable giving"
+                },
+                {
+                    "id": "misc",
+                    "name": "Miscellaneous",
+                    "budget": 2500,
+                    "notes": "SIM card, gifts"
+                }
+            ]
         };
-        localStorage.setItem('umrah_savings', JSON.stringify(data));
-      } catch (e) {
-        console.error("Save failed", e);
-        showAlert('Failed to save data', 'error');
-      }
-    }
-    
-    // Add deposit
-    function addDeposit() {
-      const depositAmount = parseFloat(elements.depositInput.value);
-      const category = elements.categorySelect.value;
-      
-      // Validate input
-      if (isNaN(depositAmount) {
-        showAlert('Please enter a valid number', 'error');
-        return;
-      }
-      
-      if (depositAmount <= 0) {
-        showAlert('Deposit amount must be positive', 'error');
-        return;
-      }
-      
-      // Update savings
-      currentSavings.total += depositAmount;
-      currentSavings[category] += depositAmount;
-      
-      // Cap at goal amounts
-      if (currentSavings[category] > goals[category]) {
-        const overflow = currentSavings[category] - goals[category];
-        currentSavings[category] = goals[category];
-        currentSavings.total -= overflow;
-      }
-      
-      if (currentSavings.total > totalGoal) {
-        currentSavings.total = totalGoal;
-      }
-      
-      // Add transaction
-      const transaction = {
-        id: Date.now(),
-        date: new Date().toLocaleDateString(),
-        amount: depositAmount,
-        category,
-        type: 'deposit'
-      };
-      transactions.unshift(transaction);
-      if (transactions.length > 10) transactions.length = 10;
-      
-      // Reset form
-      elements.depositInput.value = '';
-      
-      // Save and update
-      saveData();
-      updateDisplay();
-      showAlert(`Deposit of R${depositAmount.toFixed(2)} added successfully!`, 'success');
-      
-      // Animate progress
-      animateProgress();
-      
-      // Create confetti if goal is reached
-      if (currentSavings.total >= totalGoal) {
-        createConfetti();
-      }
-    }
-    
-    // Create confetti effect
-    function createConfetti() {
-      for (let i = 0; i < 50; i++) {
-        const confetti = document.createElement('div');
-        confetti.className = 'confetti';
-        confetti.style.left = Math.random() * 100 + 'vw';
-        confetti.style.backgroundColor = getRandomColor();
-        confetti.style.width = Math.random() * 10 + 5 + 'px';
-        confetti.style.height = Math.random() * 10 + 5 + 'px';
-        document.body.appendChild(confetti);
-        
-        // Remove confetti after animation
-        setTimeout(() => {
-          confetti.remove();
-        }, 3000);
-      }
-    }
-    
-    // Get random color for confetti
-    function getRandomColor() {
-      const colors = ['#8E44AD', '#2ECC71', '#3498DB', '#F39C12', '#E74C3C'];
-      return colors[Math.floor(Math.random() * colors.length)];
-    }
-    
-    // Update display
-    function updateDisplay() {
-      // Format numbers
-      const formatCurrency = (num) => num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      
-      // Update main progress
-      elements.goalAmount.textContent = formatCurrency(totalGoal);
-      elements.currentSavings.textContent = formatCurrency(currentSavings.total);
-      
-      const totalPercent = (currentSavings.total / totalGoal) * 100;
-      elements.progressPercent.textContent = totalPercent.toFixed(1) + '%';
-      
-      // Update category progress
-      elements.flightCurrent.textContent = formatCurrency(currentSavings.flight);
-      elements.accommodationCurrent.textContent = formatCurrency(currentSavings.accommodation);
-      elements.miscCurrent.textContent = formatCurrency(currentSavings.misc);
-      
-      // Update time info
-      updateTimeInfo();
-      
-      // Update transactions
-      updateTransactions();
-    }
-    
-    // Animate progress bars
-    function animateProgress() {
-      // Total progress
-      const totalPercent = (currentSavings.total / totalGoal) * 100;
-      elements.progressBar.style.width = totalPercent + '%';
-      elements.progressBar.textContent = totalPercent.toFixed(0) + '%';
-      
-      // Category progress
-      const flightPercent = (currentSavings.flight / goals.flight) * 100;
-      const accommodationPercent = (currentSavings.accommodation / goals.accommodation) * 100;
-      const miscPercent = (currentSavings.misc / goals.misc) * 100;
-      
-      elements.flightProgress.style.width = flightPercent + '%';
-      elements.accommodationProgress.style.width = accommodationPercent + '%';
-      elements.miscProgress.style.width = miscPercent + '%';
-    }
-    
-    // Update time information
-    function updateTimeInfo() {
-      const today = new Date();
-      const diffTime = Math.abs(targetDate - today);
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      const diffMonths = Math.ceil(diffDays / 30);
-      
-      const remainingAmount = Math.max(totalGoal - currentSavings.total, 0);
-      const monthlyTarget = remainingAmount / Math.max(diffMonths, 1);
-      
-      elements.monthsRemaining.textContent = diffMonths;
-      elements.remainingAmount.textContent = remainingAmount.toFixed(2);
-      elements.monthlyTarget.textContent = monthlyTarget.toFixed(2);
-    }
-    
-    // Update transactions list
-    function updateTransactions() {
-      elements.transactionsList.innerHTML = '';
-      
-      if (transactions.length === 0) {
-        elements.transactionsList.innerHTML = '<p>No transactions yet</p>';
-        return;
-      }
-      
-      transactions.forEach(transaction => {
-        const transactionEl = document.createElement('div');
-        transactionEl.className = `transaction-item transaction-${transaction.type}`;
-        
-        const dateAmount = document.createElement('div');
-        dateAmount.innerHTML = `
-          <span>${transaction.date}</span>
-          <strong>R${transaction.amount.toFixed(2)}</strong>
-        `;
-        
-        const category = document.createElement('div');
-        category.textContent = getCategoryName(transaction.category);
-        category.style.fontWeight = '600';
-        
-        transactionEl.appendChild(dateAmount);
-        transactionEl.appendChild(category);
-        elements.transactionsList.appendChild(transactionEl);
-      });
-    }
-    
-    // Get category display name
-    function getCategoryName(category) {
-      switch(category) {
-        case 'flight': return '✈️ Flight';
-        case 'accommodation': return '🏨 Accommodation';
-        case 'misc': return '🍱 Food & Other';
-        default: return category;
-      }
-    }
-    
-    // Show alert message
-    function showAlert(message, type) {
-      const alertEl = type === 'success' ? elements.successAlert : elements.errorAlert;
-      alertEl.textContent = message;
-      alertEl.style.display = 'block';
-      
-      // Hide other alert
-      if (type === 'success') {
-        elements.errorAlert.style.display = 'none';
-      } else {
-        elements.successAlert.style.display = 'none';
-      }
-      
-      // Auto-hide after 3 seconds
-      setTimeout(() => {
-        alertEl.style.display = 'none';
-      }, 3000);
-    }
-  </script>
+
+        // DOM Elements
+        const elements = {
+            currentSavings: document.getElementById('currentSavings'),
+            targetAmount: document.getElementById('targetAmount'),
+            progressBar: document.getElementById('progressBar'),
+            totalCost: document.getElementById('totalCost'),
+            updateProgressBtn: document.getElementById('updateProgressBtn'),
+            calculateTotalBtn: document.getElementById('calculateTotalBtn'),
+            expenseInputs: document.querySelectorAll('.editable-cost')
+        };
+
+        // State management
+        let appData = JSON.parse(JSON.stringify(DEFAULT_DATA));
+        let isLoading = false;
+
+        // Load data from JSONBin.io
+        async function loadData() {
+            try {
+                isLoading = true;
+                toggleLoadingState(true);
+                
+                const response = await fetch(API_URL, {
+                    headers: {
+                        'X-Master-Key': API_KEY,
+                        'X-Bin-Meta': 'false'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to load data');
+                }
+                
+                const data = await response.json();
+                if (data && data.tripDetails) {
+                    return data;
+                }
+                throw new Error('Invalid data structure');
+            } catch (error) {
+                console.warn('Using default data due to loading error:', error);
+                
+                // Check localStorage for backup
+                const backup = localStorage.getItem('umrahBudgetBackup');
+                if (backup) {
+                    try {
+                        return JSON.parse(backup);
+                    } catch (e) {
+                        console.warn('Failed to parse backup data:', e);
+                    }
+                }
+                
+                return JSON.parse(JSON.stringify(DEFAULT_DATA));
+            } finally {
+                isLoading = false;
+                toggleLoadingState(false);
+            }
+        }
+
+        // Save data to JSONBin.io
+        async function saveData(data) {
+            try {
+                isLoading = true;
+                toggleLoadingState(true);
+                
+                const response = await fetch(API_URL, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': API_KEY
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to save data');
+                }
+                
+                // Update local copy
+                appData = JSON.parse(JSON.stringify(data));
+                appData.tripDetails.lastUpdated = new Date().toISOString();
+                
+                // Create backup in localStorage
+                localStorage.setItem('umrahBudgetBackup', JSON.stringify(appData));
+                
+                return await response.json();
+            } catch (error) {
+                console.error('Error saving data:', error);
+                return null;
+            } finally {
+                isLoading = false;
+                toggleLoadingState(false);
+            }
+        }
+
+        // Toggle loading state
+        function toggleLoadingState(isLoading) {
+            const buttons = [elements.updateProgressBtn, elements.calculateTotalBtn];
+            
+            buttons.forEach(button => {
+                if (isLoading) {
+                    button.disabled = true;
+                    button.innerHTML = `<span class="loading"></span>${button.innerHTML}`;
+                } else {
+                    button.disabled = false;
+                    button.querySelector('.loading')?.remove();
+                }
+            });
+        }
+
+        // Update the UI with current data
+        function updateUI(data) {
+            // Trip details
+            elements.currentSavings.value = data.tripDetails.currentSavings;
+            elements.targetAmount.value = data.tripDetails.targetAmount;
+            
+            // Expense categories
+            data.expenseCategories.forEach(category => {
+                const input = document.getElementById(`${category.id}Cost`);
+                if (input) input.value = category.budget;
+            });
+            
+            // Calculate and update totals
+            calculateTotal();
+        }
+
+        // Set up all event listeners
+        function setupEventListeners() {
+            // Update progress button
+            elements.updateProgressBtn.addEventListener('click', updateProgress);
+            
+            // Calculate total button
+            elements.calculateTotalBtn.addEventListener('click', calculateTotal);
+            
+            // All editable cost inputs
+            elements.expenseInputs.forEach(input => {
+                input.addEventListener('change', calculateTotal);
+            });
+            
+            // Current savings input
+            elements.currentSavings.addEventListener('change', updateProgress);
+            
+            // Expense category headers (for toggling details)
+            document.querySelectorAll('.expense-header').forEach(header => {
+                header.addEventListener('click', function() {
+                    const details = this.nextElementSibling;
+                    details.classList.toggle('show');
+                });
+            });
+        }
+
+        // Calculate the total budget
+        async function calculateTotal() {
+            if (isLoading) return;
+            
+            let total = 0;
+            const updatedCategories = [];
+            
+            elements.expenseInputs.forEach(input => {
+                const value = parseFloat(input.value) || 0;
+                total += value;
+                
+                updatedCategories.push({
+                    id: input.id.replace('Cost', ''),
+                    budget: value
+                });
+            });
+            
+            elements.totalCost.textContent = 'R' + total.toLocaleString('en-ZA');
+            elements.targetAmount.value = total;
+            
+            // Prepare updated data
+            const updatedData = {
+                ...appData,
+                tripDetails: {
+                    ...appData.tripDetails,
+                    targetAmount: total,
+                    currentSavings: parseFloat(elements.currentSavings.value) || 0,
+                    lastUpdated: new Date().toISOString()
+                },
+                expenseCategories: updatedCategories
+            };
+            
+            // Save the updated data
+            await saveData(updatedData);
+            
+            updateProgress();
+        }
+
+        // Update the progress bar
+        function updateProgress() {
+            const current = parseFloat(elements.currentSavings.value) || 0;
+            const target = parseFloat(elements.targetAmount.value) || 1;
+            const percentage = Math.min(Math.round((current / target) * 100), 100);
+            
+            elements.progressBar.style.width = percentage + '%';
+            elements.progressBar.textContent = percentage + '%';
+            
+            // Update data if changed
+            if (appData.tripDetails.currentSavings !== current) {
+                appData.tripDetails.currentSavings = current;
+                saveData(appData);
+            }
+        }
+
+        // Initialize the application
+        async function initializeApp() {
+            // Load data
+            appData = await loadData();
+            
+            // Update UI with loaded data
+            updateUI(appData);
+            
+            // Set up event listeners
+            setupEventListeners();
+            
+            // Show all sections (initially hidden to prevent flash)
+            document.body.style.opacity = 1;
+        }
+
+        // Initialize when DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Hide body initially to prevent flash
+            document.body.style.opacity = 0;
+            
+            // Initialize app
+            initializeApp();
+        });
+    </script>
 </body>
 </html>
